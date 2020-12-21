@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState,useEffect} from 'react';
+import {getForumPost} from './services/getForumPost';
+import ForumList from './forumList/ForumList';
+import styled from 'styled-components';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const H1=styled.h1`
+  color: #e9f3ed;
+`;
+
+const App =()=>{
+  const [users,setUsers]=useState(null);
+  const [topics,setTopics]=useState(null);
+
+  useEffect(()=>{
+    getForumPost()
+    .then((response)=>{
+      setUsers(response.users);
+      setTopics(response.topics);
+    })
+  },[])
+
+  if(!topics || !users)return null;
+
+  return(
+    <div>
+        <H1><i className="fab fa-free-code-camp"></i> FCC Forum HomePage</H1>
+        <ForumList topics={topics} users={users}/>
     </div>
-  );
-}
+  )
+};
 
 export default App;
